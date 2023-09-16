@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { NewTodoForm } from "./NewTodoForm"
 import { TodoList } from "./TodoList"
 import "./styles.css"
@@ -7,8 +7,20 @@ import "./styles.css"
 // so we use fragment element (<></>) to return <form> + <h1>
 // ...currentTodoList will return new array with provided array elements
 
+// useState, useEffect = these are hooks and they always must be on the top of the component
+
 export default function App() {
-  const [todoList, setTodoList] = useState([])
+  const [todoList, setTodoList] = useState(() => {
+    const localTodoList = localStorage.getItem("ITEMS")
+    if (localTodoList == null) return []
+    return JSON.parse(localTodoList)
+  })
+
+  // This function is called everytime when second object in it's parameters is modified
+  // In our case, when todoList changes, this function will be called
+  useEffect(() => {
+    localStorage.setItem("ITEMS", JSON.stringify(todoList))
+  }, [todoList])
 
   function addTodo(title) {
     setTodoList(currentTodoList => {
