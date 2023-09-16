@@ -1,32 +1,25 @@
 import { useState } from "react"
+import { NewTodoForm } from "./NewTodoForm"
+import { TodoList } from "./TodoList"
 import "./styles.css"
 
 // React component can return only ONE element,
 // so we use fragment element (<></>) to return <form> + <h1>
-// ...currentTodoList will return new array with these elements
+// ...currentTodoList will return new array with provided array elements
+
 export default function App() {
-  const [newItem, setNewItem] = useState("")
-  const [todoList, setTodoList] = useState([
-    { 
-      id: crypto.randomUUID(), 
-      title: "Eat rice with chicken", 
-      completed: true 
-    }])
+  const [todoList, setTodoList] = useState([])
 
-  function handleSubmit(e) {
-    e.preventDefault()
-
+  function addTodo(title) {
     setTodoList(currentTodoList => {
       return [
         ...currentTodoList,
         {
           id: crypto.randomUUID(),
-          title: newItem,
+          title: title,
           completed: false
         }]
     })
-
-    setNewItem("")
   }
 
   function toggleTodo(id, completed) {
@@ -48,39 +41,11 @@ export default function App() {
 
   return (
     <>
-      <form onSubmit={handleSubmit} className="new-item-form">
-        <div className="form-row">
-          <label htmlFor="item" >New Item</label>
-          <input
-            value={newItem}
-            onChange={event => setNewItem(event.target.value)}
-            type="text"
-            id="item"
-          />
-        </div>
-        <button className="btn">Add</button>
-      </form>
-
-      <h1 className="header">ToDo List</h1>
-
-      <ul className="list">
-        {todoList.length === 0 && "No ToDo Items"}
-        {todoList.map(todo => {
-          return (
-            <li key={todo.id}>
-              <label>
-                <input 
-                  type="checkbox" 
-                  onChange={event => toggleTodo(todo.id, event.target.checked)}
-                  checked={todo.completed}
-                />
-                {todo.title}
-              </label>
-              <button onClick={() => deleteTodo(todo.id)} className="btn btn-danger">Delete</button>
-            </li>
-          )
-        })}
-      </ul>
+      <NewTodoForm addTodo={addTodo} />
+      <h1 className="header">Todo List</h1>
+      <TodoList 
+        todoList={todoList} 
+          toggleTodo={toggleTodo} deleteTodo={deleteTodo} />
     </>
   )
 }
