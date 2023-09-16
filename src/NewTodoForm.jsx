@@ -19,6 +19,7 @@ export function NewTodoForm(props) {
                     onChange={event => setNewItem(event.target.value)}
                     type="text"
                     id="item"
+                    autoComplete="off"
                 />
             </div>
             <button className="btn">Add</button>
